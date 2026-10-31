@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Taxi Mazarine : service de taxi parisien (site de démonstration). Demandez une réservation en ligne.">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Taxi Mazarine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Concept : bandeau bleu façon plaque de rue parisienne en tête de page, formulaire de réservation
+   en carte claire à droite, lanterne de toit ambrée comme unique accent. */
+:root{
+  --plaque:#0f3d73;
+  --plaque-line:#3b659b;
+  --on-plaque:#f4f7fb;
+  --on-plaque-soft:#bfd0e6;
+  --lantern:#f5b21a;
+  --lantern-shade:#b57d00;
+  --on-lantern:#1b1400;
+  --paper:#eff3f7;
+  --card:#ffffff;
+  --ink:#14212f;
+  --muted:#4d5d73;
+  --line:#d3dce7;
+  --edge:#7b8da4;
+  --rule:#0f3d73;
+  --field:#f8fafc;
+  --focus:#1a6fd1;
+  --note:#fff6dc;
+  --note-line:#e2b43a;
+  --font-display:'Barlow Condensed','Arial Narrow',Arial,sans-serif;
+  --font-body:'Public Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --plaque:#0b2749;
+    --plaque-line:#27497a;
+    --on-plaque:#eef3fa;
+    --on-plaque-soft:#a6bad6;
+    --lantern:#f5b21a;
+    --lantern-shade:#8f6200;
+    --on-lantern:#1b1400;
+    --paper:#0b1320;
+    --card:#13202f;
+    --ink:#e8eef6;
+    --muted:#a2b2c7;
+    --line:#243449;
+    --edge:#58708d;
+    --rule:#5f8fd0;
+    --field:#0e1927;
+    --focus:#74b4ff;
+    --note:#2b2512;
+    --note-line:#8a6a14;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --plaque:#0b2749;
+  --plaque-line:#27497a;
+  --on-plaque:#eef3fa;
+  --on-plaque-soft:#a6bad6;
+  --lantern:#f5b21a;
+  --lantern-shade:#8f6200;
+  --on-lantern:#1b1400;
+  --paper:#0b1320;
+  --card:#13202f;
+  --ink:#e8eef6;
+  --muted:#a2b2c7;
+  --line:#243449;
+  --edge:#58708d;
+  --rule:#5f8fd0;
+  --field:#0e1927;
+  --focus:#74b4ff;
+  --note:#2b2512;
+  --note-line:#8a6a14;
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:1rem;line-height:1.55}
+h1,h2,h3,p,ul,ol,dl,dd,figure{margin:0}
+a{color:inherit}
+
+.wrap{width:100%;max-width:1160px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* ——— Bandeau bleu ——— */
+.band{background:var(--plaque);color:var(--on-plaque)}
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding-block:18px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.lantern{font-family:var(--font-display);font-weight:700;font-size:1.25rem;letter-spacing:.08em;line-height:1;background:var(--lantern);color:var(--on-lantern);padding:7px 12px 6px;border-radius:10px 10px 3px 3px;box-shadow:0 3px 0 var(--lantern-shade)}
+.sign{display:grid;border:2px solid var(--on-plaque);border-radius:4px;padding:3px 12px 4px;line-height:1.05}
+.sign b{font-family:var(--font-display);font-weight:700;font-size:1.6rem;letter-spacing:.08em;text-transform:uppercase}
+.sign i{font-style:normal;font-size:.625rem;letter-spacing:.16em;text-transform:uppercase;color:var(--on-plaque-soft)}
+.tel small{display:block;font-size:.6875rem;letter-spacing:.1em;text-transform:uppercase;color:var(--on-plaque-soft)}
+.tel strong{font-family:var(--font-display);font-weight:700;font-size:1.65rem;letter-spacing:.04em;line-height:1.1;font-variant-numeric:tabular-nums}
+
+.hero{display:grid;gap:28px;grid-template-columns:minmax(0,1fr);grid-template-areas:"intro" "form" "facts";padding-block:12px 48px}
+.intro{grid-area:intro;min-width:0}
+.card{grid-area:form}
+.facts{grid-area:facts}
+@media (min-width:900px){
+  .hero{grid-template-columns:minmax(0,1fr) minmax(0,480px);grid-template-areas:"intro form" "facts form";grid-template-rows:auto 1fr;column-gap:56px;align-items:start;padding-block:28px 72px}
+}
+h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2.6rem,7vw,4.4rem);line-height:.98;text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+h1 .hl{color:var(--lantern)}
+.lede{margin-top:16px;max-width:44ch;font-size:1.0625rem;color:var(--on-plaque-soft)}
+.facts{list-style:none;padding:0;display:grid;min-width:0}
+.facts li{display:grid;gap:2px;padding-block:14px;border-top:1px solid var(--plaque-line)}
+.facts h3{font-family:var(--font-display);font-weight:700;font-size:1.3rem;letter-spacing:.04em;text-transform:uppercase}
+.facts p{font-size:.9375rem;color:var(--on-plaque-soft)}
+
+/* ——— Formulaire ——— */
+.card{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px;box-shadow:0 18px 40px -22px rgba(0,0,0,.6);padding:22px;min-width:0}
+.card-title{font-family:var(--font-display);font-weight:700;font-size:1.9rem;line-height:1.1}
+.card-sub{margin:4px 0 18px;color:var(--muted);font-size:.9375rem}
+form{display:grid;gap:16px}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+.field{display:grid;gap:6px;min-width:0}
+.field label,.legend{font-size:.8125rem;font-weight:600;letter-spacing:.02em;padding:0}
+.opt{font-weight:400;color:var(--muted)}
+.ctl{font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--edge);border-radius:4px;padding:10px 12px;min-height:44px;width:100%;min-width:0}
+textarea.ctl{min-height:78px;resize:vertical}
+.ctl::placeholder{color:var(--muted);opacity:.85}
+.ctl:focus-visible,.chip:focus-visible,.btn:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.ctl:user-invalid{border-color:#b42318}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:12px}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--edge);border-radius:4px;overflow:hidden}
+.seg label{position:relative;display:block;font-weight:600}
+.seg input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.seg span{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 10px;font-size:.9375rem;text-align:center;background:var(--field);color:var(--ink)}
+.seg input:checked + span{background:var(--plaque);color:var(--on-plaque);box-shadow:inset 0 -4px 0 var(--lantern)}
+.seg input:focus-visible + span{outline:3px solid var(--focus);outline-offset:-3px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:.8125rem;font-weight:500;min-height:32px;padding:5px 12px;border:1px solid var(--edge);border-radius:999px;background:var(--card);color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--plaque);border-color:var(--plaque);color:var(--on-plaque)}
+.hint{min-height:1.3em;font-size:.8125rem;color:var(--muted)}
+.btn{font-family:var(--font-display);font-weight:700;font-size:1.35rem;letter-spacing:.05em;text-transform:uppercase;border:0;border-radius:4px;min-height:54px;padding:10px 18px;cursor:pointer;background:var(--lantern);color:var(--on-lantern);box-shadow:0 3px 0 var(--lantern-shade);transition:transform .1s,box-shadow .1s}
+.btn:hover{transform:translateY(1px);box-shadow:0 2px 0 var(--lantern-shade)}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.btn-ghost{background:transparent;color:var(--ink);box-shadow:none;border:1px solid var(--edge);font-size:1.1rem;min-height:46px}
+.btn-ghost:hover{box-shadow:none;transform:none;border-color:var(--ink)}
+.fine{font-size:.75rem;color:var(--muted)}
+
+.recap{display:grid;gap:16px}
+.recap:focus{outline:none}
+.recap dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px}
+.recap dt{font-size:.8125rem;color:var(--muted)}
+.recap dd{font-weight:500;overflow-wrap:anywhere}
+.demo-note{background:var(--note);border:1px solid var(--note-line);border-radius:4px;padding:12px 14px;font-size:.9375rem}
+
+/* ——— Sections ——— */
+.section{padding-block:56px}
+.section + .section{border-top:1px solid var(--line)}
+.title{font-family:var(--font-display);font-weight:700;font-size:clamp(2rem,4.5vw,2.75rem);line-height:1.05;text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+.sub{margin:8px 0 28px;max-width:60ch;color:var(--muted)}
+.svc{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:28px 32px}
+.svc li{border-top:3px solid var(--rule);padding-top:12px;min-width:0}
+.svc h3,.steps h3{font-family:var(--font-display);font-weight:700;font-size:1.5rem;line-height:1.15}
+.svc p,.steps p{margin-top:4px;color:var(--muted)}
+.tablewrap{overflow-x:auto;max-width:760px;border:1px solid var(--line);border-radius:4px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:480px;font-variant-numeric:tabular-nums}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--line)}
+thead th{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+tbody th{font-weight:600}
+td.price{text-align:right;font-family:var(--font-display);font-size:1.4rem;font-weight:700;white-space:nowrap}
+thead th:last-child{text-align:right}
+.table-note{margin-top:12px;max-width:760px;font-size:.875rem;color:var(--muted)}
+.steps{list-style:none;padding:0;counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:28px}
+.steps li{counter-increment:s;display:grid;gap:10px;align-content:start;min-width:0}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:38px;height:38px;border:2px solid var(--rule);border-radius:4px;background:var(--plaque);color:var(--on-plaque);font-family:var(--font-display);font-weight:700;font-size:1.3rem}
+.steps p{margin-top:0}
+.faq{max-width:760px;border-top:1px solid var(--line)}
+details{border-bottom:1px solid var(--line)}
+summary{display:flex;justify-content:space-between;gap:16px;padding:16px 0;font-weight:600;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--font-display);font-size:1.5rem;line-height:1}
+details[open] summary::after{content:"\2212"}
+details p{padding:0 0 16px;max-width:62ch;color:var(--muted)}
+
+footer.band{margin-top:0}
+.foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 32px;padding-block:32px}
+.foot p{max-width:56ch;font-size:.875rem;color:var(--on-plaque-soft)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="band">
+  <header class="wrap top">
+    <a class="brand" href="#top" aria-label="Taxi Mazarine, haut de page">
+      <span class="lantern" aria-hidden="true">TAXI</span>
+      <span class="sign"><b>Mazarine</b><i>Paris · Île-de-France</i></span>
+    </a>
+    <p class="tel"><small>Réserver par téléphone</small><strong>01 99 00 67 24</strong></p>
+  </header>
+
+  <div class="wrap hero" id="top">
+    <div class="intro">
+      <h1>Un taxi parisien, <span class="hl">à l'heure.</span></h1>
+      <p class="lede">Indiquez votre trajet en une minute. Nous vous rappelons pour confirmer l'heure de prise en charge et le prix.</p>
+    </div>
+
+    <section class="card" aria-labelledby="t-resa">
+      <h2 class="card-title" id="t-resa">Demande de réservation</h2>
+      <p class="card-sub">Gratuit et sans engagement. Aucun paiement à cette étape.</p>
+
+      <form id="resa" aria-labelledby="t-resa">
+        <fieldset>
+          <legend class="legend" style="margin-bottom:6px">Quand ?</legend>
+          <div class="seg">
+            <label><input type="radio" name="quand" value="now"><span>Dès que possible</span></label>
+            <label><input type="radio" name="quand" value="later" checked><span>À l'avance</span></label>
+          </div>
+        </fieldset>
+
+        <div id="later" class="row">
+          <div class="field">
+            <label for="date">Date</label>
+            <input class="ctl" type="date" id="date" name="date" required>
+          </div>
+          <div class="field">
+            <label for="time">Heure de prise en charge</label>
+            <input class="ctl" type="time" id="time" name="time" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="depart">Départ</label>
+          <input class="ctl" type="text" id="depart" name="depart" required autocomplete="off" placeholder="Ex. 12 rue de Rivoli, Paris 4e">
+        </div>
+
+        <div class="field">
+          <label for="arrivee">Arrivée</label>
+          <input class="ctl" type="text" id="arrivee" name="arrivee" required autocomplete="off" placeholder="Adresse, gare ou aéroport">
+          <div class="chips" role="group" aria-label="Destinations fréquentes">
+            <button type="button" class="chip" data-dest="Aéroport Roissy-CDG" aria-pressed="false">Roissy-CDG</button>
+            <button type="button" class="chip" data-dest="Aéroport d'Orly" aria-pressed="false">Orly</button>
+            <button type="button" class="chip" data-dest="Gare du Nord" aria-pressed="false">Gare du Nord</button>
+            <button type="button" class="chip" data-dest="Gare de Lyon" aria-pressed="false">Gare de Lyon</button>
+            <button type="button" class="chip" data-dest="Gare Montparnasse" aria-pressed="false">Montparnasse</button>
+          </div>
+          <p class="hint" id="hint" aria-live="polite"></p>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="pax">Passagers</label>
+            <select class="ctl" id="pax" name="pax">
+              <option>1 passager</option>
+              <option selected>2 passagers</option>
+              <option>3 passagers</option>
+              <option>4 passagers</option>
+              <option>5 à 7 passagers (van)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="bag">Bagages</label>
+            <select class="ctl" id="bag" name="bag">
+              <option>Pas de bagage</option>
+              <option selected>1 ou 2 valises</option>
+              <option>3 valises ou plus</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="nom">Nom</label>
+            <input class="ctl" type="text" id="nom" name="nom" required autocomplete="name" placeholder="Prénom Nom">
+          </div>
+          <div class="field">
+            <label for="tel">Téléphone</label>
+            <input class="ctl" type="tel" id="tel" name="tel" required autocomplete="tel" inputmode="tel" pattern="[0-9 .+()\-]{8,20}" title="Numéro de téléphone, par exemple 06 12 34 56 78" placeholder="06 12 34 56 78">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="mail">E-mail <span class="opt">(facultatif)</span></label>
+          <input class="ctl" type="email" id="mail" name="mail" autocomplete="email" placeholder="nom@exemple.fr">
+        </div>
+
+        <div class="field">
+          <label for="note">Remarques <span class="opt">(facultatif)</span></label>
+          <textarea class="ctl" id="note" name="note" placeholder="N° de vol ou de train, siège enfant, code d'entrée…"></textarea>
+        </div>
+
+        <button class="btn" type="submit">Demander ma réservation</button>
+        <p class="fine">Vos coordonnées servent uniquement à traiter cette demande.</p>
+      </form>
+
+      <div class="recap" id="recap" tabindex="-1" hidden>
+        <h3 class="card-title" style="font-size:1.6rem">Votre demande</h3>
+        <dl id="recap-list"></dl>
+        <p class="demo-note"><strong>Démonstration.</strong> Cette demande n'a été transmise à personne. Pour recevoir de vraies demandes, le formulaire doit être relié à votre système de réservation.</p>
+        <button class="btn btn-ghost" type="button" id="edit">Modifier la demande</button>
+      </div>
+    </section>
+
+    <ul class="facts">
+      <li><h3>Forfaits fixes aéroports</h3><p>Prix annoncé avant le départ vers Roissy-CDG et Orly.</p></li>
+      <li><h3>Paiement à bord</h3><p>Carte bancaire ou espèces, reçu remis en fin de course.</p></li>
+      <li><h3>Vol et train suivis</h3><p>Indiquez votre numéro : le chauffeur s'adapte à l'heure réelle d'arrivée.</p></li>
+    </ul>
+  </div>
+</div>
+
+<main>
+  <section class="section">
+    <div class="wrap">
+      <h2 class="title">Nos courses</h2>
+      <p class="sub">Un taxi pour un rendez-vous, un train à prendre ou une journée entière dans la ville.</p>
+      <ul class="svc">
+        <li><h3>Aéroports et gares</h3><p>Roissy-CDG, Orly, Beauvais et toutes les gares parisiennes, avec prise en charge à l'adresse de votre choix.</p></li>
+        <li><h3>Paris et petite couronne</h3><p>Courses au compteur, de jour comme de nuit, dans tous les arrondissements et les communes limitrophes.</p></li>
+        <li><h3>Mise à disposition</h3><p>Un chauffeur à l'heure ou à la demi-journée pour enchaîner rendez-vous et visites.</p></li>
+        <li><h3>Van de 5 à 7 places</h3><p>Pour les familles et les petits groupes qui voyagent avec leurs valises.</p></li>
+        <li><h3>Grandes distances</h3><p>Versailles, Disneyland Paris, Chantilly, Fontainebleau : prix convenu à la réservation.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="title">Tarifs aéroports</h2>
+      <p class="sub">Forfaits depuis Paris intra-muros, valables quelle que soit la circulation.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th scope="col">Destination</th><th scope="col">Départ</th><th scope="col">Forfait</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Roissy-CDG</th><td>Rive droite</td><td class="price">56 €</td></tr>
+            <tr><th scope="row">Roissy-CDG</th><td>Rive gauche</td><td class="price">65 €</td></tr>
+            <tr><th scope="row">Orly</th><td>Rive gauche</td><td class="price">36 €</td></tr>
+            <tr><th scope="row">Orly</th><td>Rive droite</td><td class="price">44 €</td></tr>
+            <tr><th scope="row">Autres trajets</th><td>Tous quartiers</td><td class="price">Au compteur</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Montants donnés à titre d'exemple pour cette démonstration. Vérifiez les tarifs réglementés en vigueur avant toute mise en ligne.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="title">Comment ça se passe</h2>
+      <p class="sub">De la demande à la prise en charge, en trois étapes.</p>
+      <ol class="steps">
+        <li><h3>Vous remplissez la demande</h3><p>Départ, arrivée, date et heure. Une minute suffit.</p></li>
+        <li><h3>Nous vous rappelons</h3><p>Nous confirmons l'heure et le prix, puis vous donnons le nom de votre chauffeur.</p></li>
+        <li><h3>Le chauffeur vous attend</h3><p>À l'adresse indiquée. Pour un aéroport ou une gare, il suit votre vol ou votre train.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="title">Questions fréquentes</h2>
+      <p class="sub"></p>
+      <div class="faq">
+        <details><summary>Comment payer ma course ?</summary><p>Par carte bancaire ou en espèces à bord. Un reçu vous est remis à la fin de la course.</p></details>
+        <details><summary>Puis-je réserver pour demain très tôt ?</summary><p>Oui. Choisissez « À l'avance », indiquez l'heure souhaitée et nous confirmons par téléphone.</p></details>
+        <details><summary>Prévoyez-vous un siège enfant ?</summary><p>Oui. Précisez l'âge de l'enfant dans les remarques et nous préparons le siège adapté.</p></details>
+        <details><summary>Mon vol a du retard, que se passe-t-il ?</summary><p>Indiquez votre numéro de vol dans les remarques. Le chauffeur se cale sur l'heure d'arrivée réelle.</p></details>
+        <details><summary>Comment annuler ?</summary><p>Appelez-nous dès que possible. Une annulation avant la prise en charge est sans frais.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="band">
+  <div class="wrap foot">
+    <a class="brand" href="#top" aria-label="Taxi Mazarine, haut de page">
+      <span class="lantern" aria-hidden="true">TAXI</span>
+      <span class="sign"><b>Mazarine</b><i>Paris · Île-de-France</i></span>
+    </a>
+    <p>Taxi Mazarine est une marque fictive et ce site est une démonstration : le formulaire n'envoie rien et le numéro de téléphone est fictif. Licence, adresse et mentions légales sont à compléter.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $('resa'), recap = $('recap'), later = $('later');
+  var date = $('date'), time = $('time'), dest = $('arrivee'), hint = $('hint');
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+  var pad = function (n) { return String(n).padStart(2, '0'); };
+  var ymd = function (d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+  var hm = function (d) { return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+
+  // Valeurs par défaut : dans 45 minutes, arrondi au quart d'heure suivant
+  var d0 = new Date(Date.now() + 45 * 60000);
+  d0.setMinutes(Math.ceil(d0.getMinutes() / 15) * 15, 0, 0);
+  date.min = ymd(new Date());
+  date.value = ymd(d0);
+  time.value = hm(d0);
+
+  function mode() { return form.elements['quand'].value; }
+
+  function checkTime() {
+    time.setCustomValidity('');
+    if (mode() !== 'later' || !date.value || !time.value) return;
+    var a = date.value.split('-').map(Number), b = time.value.split(':').map(Number);
+    if (new Date(a[0], a[1] - 1, a[2], b[0], b[1]) < new Date()) {
+      time.setCustomValidity("Choisissez une heure à venir.");
+    }
+  }
+
+  function syncMode() {
+    var isLater = mode() === 'later';
+    later.hidden = !isLater;
+    date.disabled = !isLater;
+    time.disabled = !isLater;
+    checkTime();
+  }
+
+  Array.prototype.forEach.call(form.querySelectorAll('input[name="quand"]'), function (r) {
+    r.addEventListener('change', syncMode);
+  });
+  date.addEventListener('input', checkTime);
+  time.addEventListener('input', checkTime);
+  syncMode();
+
+  function updateHint() {
+    var v = dest.value, t = '';
+    if (/roissy|cdg|charles.?de.?gaulle/i.test(v)) {
+      t = 'Forfait Roissy-CDG (exemple de démonstration) : 56 € depuis la rive droite, 65 € depuis la rive gauche.';
+    } else if (/orly/i.test(v)) {
+      t = 'Forfait Orly (exemple de démonstration) : 36 € depuis la rive gauche, 44 € depuis la rive droite.';
+    } else if (v.trim()) {
+      t = 'Course au compteur : nous vous donnons une estimation lors de la confirmation.';
+    }
+    hint.textContent = t;
+    chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c.dataset.dest === v)); });
+  }
+  dest.addEventListener('input', updateHint);
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () { dest.value = c.dataset.dest; updateHint(); });
+  });
+
+  function selText(id) { var s = $(id); return s.options[s.selectedIndex].text; }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    checkTime();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+
+    var when = 'Dès que possible';
+    if (mode() === 'later') {
+      var a = date.value.split('-').map(Number);
+      when = new Date(a[0], a[1] - 1, a[2]).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+           + ' à ' + time.value.replace(':', 'h');
+    }
+    var rows = [
+      ['Quand', when],
+      ['Départ', $('depart').value.trim()],
+      ['Arrivée', dest.value.trim()],
+      ['Passagers', selText('pax')],
+      ['Bagages', selText('bag')],
+      ['Nom', $('nom').value.trim()],
+      ['Téléphone', $('tel').value.trim()]
+    ];
+    if ($('mail').value.trim()) rows.push(['E-mail', $('mail').value.trim()]);
+    if ($('note').value.trim()) rows.push(['Remarques', $('note').value.trim()]);
+
+    var list = $('recap-list');
+    list.textContent = '';
+    rows.forEach(function (r) {
+      var dt = document.createElement('dt'); dt.textContent = r[0];
+      var dd = document.createElement('dd'); dd.textContent = r[1];
+      list.appendChild(dt); list.appendChild(dd);
+    });
+
+    form.hidden = true;
+    document.querySelector('.card-sub').hidden = true;
+    recap.hidden = false;
+    recap.focus();
+  });
+
+  $('edit').addEventListener('click', function () {
+    recap.hidden = true;
+    form.hidden = false;
+    document.querySelector('.card-sub').hidden = false;
+    $('depart').focus();
+  });
+})();
+</script>
+
+</body>
+</html>
