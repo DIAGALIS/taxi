@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Remplacez VOTRE-DOMAINE par votre adresse réelle
+Sitemap: https://VOTRE-DOMAINE/sitemap.xml
